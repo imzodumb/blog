@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Secure Blog</title>
+  <title>Simple Secure Blog</title>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
@@ -85,40 +85,55 @@
     loadPosts();
   </script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #121212;
       color: white;
+      margin: 0;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
       color: #00adb5;
+      font-size: 1.8rem;
     }
 
     .post-form {
       margin: 20px auto;
+      max-width: 100%;
+      width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      padding: 0 10px;
     }
 
     input, textarea {
-      padding: 10px;
+      width: 100%;
+      padding: 12px;
       border: none;
       border-radius: 5px;
       font-size: 1rem;
     }
 
+    textarea {
+      resize: vertical;
+    }
+
     button {
-      padding: 10px;
+      padding: 12px;
       background-color: #00adb5;
       color: white;
       border: none;
       border-radius: 5px;
       font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
     }
 
@@ -128,8 +143,11 @@
     }
 
     .posts {
+      max-width: 100%;
+      width: 100%;
       max-width: 600px;
       margin: 30px auto;
+      padding: 0 10px;
     }
 
     .post {
@@ -142,11 +160,16 @@
     .username {
       font-weight: bold;
       color: #00adb5;
+      margin-bottom: 5px;
+    }
+
+    .content {
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>Secure Blog</h1>
+  <h1>Simple Secure Blog</h1>
   <form class="post-form" id="postForm" onsubmit="handleSubmit(event)">
     <input type="text" id="username" placeholder="Enter a username" required />
     <textarea id="message" rows="4" placeholder="Write your post here..." required></textarea>
@@ -155,5 +178,3 @@
   <div class="posts" id="postsContainer"></div>
 </body>
 </html>
-"""
-
