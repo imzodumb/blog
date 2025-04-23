@@ -45,16 +45,27 @@
       line-height: 1.5;
     }
 
-    .blog-button {
-      display: inline-block;
+    .button-group {
       margin-top: 20px;
-      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .button-link {
+      padding: 12px 20px;
       background-color: #00adb5;
       color: white;
       text-decoration: none;
       border-radius: 5px;
       font-weight: bold;
       font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .button-link:hover {
+      background-color: #009ba2;
     }
 
     @media (max-width: 480px) {
@@ -66,9 +77,9 @@
         font-size: 0.95rem;
       }
 
-      .blog-button {
+      .button-link {
         font-size: 0.95rem;
-        padding: 10px 20px;
+        padding: 10px 16px;
       }
     }
   </style>
@@ -79,7 +90,11 @@
     <p>
       Hello, I'm Mr O, I'm Here To Learn the Cyber Arts. This is my corner of the web where I share my thoughts, work, and hobbies.
     </p>
-    <a class="blog-button" href="blog.html">Go to Blog</a>
+    <div class="button-group">
+      <a class="button-link" href="blog.html">Go to Blog</a>
+      <a class="button-link" href="https://www.youtube.com/@MrOs_Repository" target="_blank">YouTube</a>
+      <a class="button-link" href="https://github.com/imzodumb" target="_blank">GitHub</a>
+    </div>
   </div>
 </body>
 </html>
