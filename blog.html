@@ -1,14 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Visible Blog</title>
+  <title>Secure Blog</title>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-    import { marked } from "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAV4hyBHNmk9nOict3SrTu51DOa9thVTYE",
@@ -24,24 +22,10 @@
     const db = getDatabase(app);
     const postsRef = ref(db, 'posts');
 
-    const USER_ID = localStorage.getItem("anonUserId") || (() => {
-      const id = 'user_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem("anonUserId", id);
-      return id;
-    })();
-
-    function sanitizeText(text) {
-      return text.replace(/[<>]/g, (match) => {
-        return match === "<" ? "&lt;" : "&gt;";
-      });
-    }
-
-    function timeAgo(timestamp) {
-      const diff = Math.floor((Date.now() - timestamp) / 1000);
-      if (diff < 60) return diff + "s ago";
-      if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-      if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-      return Math.floor(diff / 86400) + "d ago";
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[tag]);
     }
 
     function renderPost(postId, post) {
@@ -50,17 +34,17 @@
 
       const header = document.createElement('div');
       header.className = 'username';
-      header.textContent = post.username + " • " + timeAgo(post.timestamp);
+      header.textContent = post.username;
       div.appendChild(header);
 
       const content = document.createElement('div');
       content.className = 'content';
-      content.innerHTML = marked.parse(sanitizeText(post.message));
+      content.textContent = post.message;
       div.appendChild(content);
 
       const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = "Delete";
-      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.className = 'delete-btn';
       deleteBtn.onclick = () => {
         remove(ref(db, 'posts/' + postId));
       };
@@ -74,34 +58,25 @@
         const data = snapshot.val();
         const container = document.getElementById('postsContainer');
         container.innerHTML = '';
-        const entries = data ? Object.entries(data).reverse() : [];
-        entries.forEach(([postId, post]) => {
-          const postDiv = renderPost(postId, post);
-          container.appendChild(postDiv);
-        });
+        if (data) {
+          Object.entries(data).reverse().forEach(([postId, post]) => {
+            const postDiv = renderPost(postId, post);
+            container.appendChild(postDiv);
+          });
+        }
       });
     }
 
-    window.handleSubmit = async function(e) {
+    window.handleSubmit = function(e) {
       e.preventDefault();
-      const username = sanitizeText(document.getElementById('username').value.trim());
-      const message = sanitizeText(document.getElementById('message').value.trim());
+      const username = escapeHTML(document.getElementById('username').value.trim());
+      const message = escapeHTML(document.getElementById('message').value.trim());
       if (!username || !message) return;
-
-      const lastPostTime = localStorage.getItem("lastPostTime");
-      const now = Date.now();
-      if (lastPostTime && now - parseInt(lastPostTime) < 15000) {
-        alert("Please wait 15 seconds before posting again.");
-        return;
-      }
-
-      localStorage.setItem("lastPostTime", now.toString());
 
       push(postsRef, {
         username,
         message,
-        timestamp: now,
-        userId: USER_ID
+        timestamp: Date.now()
       });
 
       document.getElementById('postForm').reset();
@@ -116,10 +91,12 @@
       color: white;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
       color: #00adb5;
     }
+
     .post-form {
       margin: 20px auto;
       max-width: 600px;
@@ -127,15 +104,14 @@
       flex-direction: column;
       gap: 10px;
     }
+
     input, textarea {
       padding: 10px;
       border: none;
       border-radius: 5px;
       font-size: 1rem;
     }
-    textarea {
-      resize: vertical;
-    }
+
     button {
       padding: 10px;
       background-color: #00adb5;
@@ -145,38 +121,39 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     .delete-btn {
       margin-top: 10px;
       background-color: #e74c3c;
     }
+
     .posts {
       max-width: 600px;
       margin: 30px auto;
     }
+
     .post {
       background: #1f1f1f;
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 15px;
     }
+
     .username {
       font-weight: bold;
       color: #00adb5;
-      margin-bottom: 5px;
-    }
-    .content {
-      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>Blog</h1>
+  <h1>Secure Blog</h1>
   <form class="post-form" id="postForm" onsubmit="handleSubmit(event)">
     <input type="text" id="username" placeholder="Enter a username" required />
-    <textarea id="message" rows="4" placeholder="Write your post here... (Markdown and emojis supported)" required></textarea>
+    <textarea id="message" rows="4" placeholder="Write your post here..." required></textarea>
     <button type="submit">Post</button>
   </form>
   <div class="posts" id="postsContainer"></div>
 </body>
 </html>
+"""
 
