@@ -6,10 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About Me</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      min-height: 100vh;
       background-image: url('https://i.pinimg.com/736x/d2/51/0c/d2510cced616251464875cbd0929088e.jpg');
       background-size: cover;
       background-position: center;
@@ -20,30 +24,52 @@
       text-align: center;
       color: white;
       font-family: Arial, sans-serif;
+      padding: 20px;
     }
+
     .overlay {
       background-color: rgba(0, 0, 0, 0.6);
-      padding: 40px;
+      padding: 30px;
       border-radius: 10px;
       max-width: 600px;
+      width: 100%;
     }
+
     h1 {
       margin: 0 0 20px;
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
+
     p {
-      font-size: 1.2rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1.5;
     }
+
     .blog-button {
       display: inline-block;
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       background-color: #00adb5;
       color: white;
       text-decoration: none;
       border-radius: 5px;
       font-weight: bold;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+
+      .blog-button {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
