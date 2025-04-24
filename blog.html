@@ -3,178 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simple Secure Blog</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAV4hyBHNmk9nOict3SrTu51DOa9thVTYE",
-      authDomain: "database-1b3a4.firebaseapp.com",
-      databaseURL: "https://database-1b3a4-default-rtdb.firebaseio.com",
-      projectId: "database-1b3a4",
-      storageBucket: "database-1b3a4.firebasestorage.app",
-      messagingSenderId: "62897467919",
-      appId: "1:62897467919:web:4ddabc943535bf30ad697a"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const postsRef = ref(db, 'posts');
-
-    function escapeHTML(str) {
-      return str.replace(/[&<>"']/g, tag => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-      })[tag]);
-    }
-
-    function renderPost(postId, post) {
-      const div = document.createElement('div');
-      div.className = 'post';
-
-      const header = document.createElement('div');
-      header.className = 'username';
-      header.textContent = post.username;
-      div.appendChild(header);
-
-      const content = document.createElement('div');
-      content.className = 'content';
-      content.textContent = post.message;
-      div.appendChild(content);
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.className = 'delete-btn';
-      deleteBtn.onclick = () => {
-        remove(ref(db, 'posts/' + postId));
-      };
-      div.appendChild(deleteBtn);
-
-      return div;
-    }
-
-    function loadPosts() {
-      onValue(postsRef, snapshot => {
-        const data = snapshot.val();
-        const container = document.getElementById('postsContainer');
-        container.innerHTML = '';
-        if (data) {
-          Object.entries(data).reverse().forEach(([postId, post]) => {
-            const postDiv = renderPost(postId, post);
-            container.appendChild(postDiv);
-          });
-        }
-      });
-    }
-
-    window.handleSubmit = function(e) {
-      e.preventDefault();
-      const username = escapeHTML(document.getElementById('username').value.trim());
-      const message = escapeHTML(document.getElementById('message').value.trim());
-      if (!username || !message) return;
-
-      push(postsRef, {
-        username,
-        message,
-        timestamp: Date.now()
-      });
-
-      document.getElementById('postForm').reset();
-    };
-
-    loadPosts();
-  </script>
+  <title>About Me</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-rXvUWTY+My95gB0iMXVGYOu0PjX5w8KQ2cXCRJrNfRHkakgh1UvhGu77EoH+AxlsEjMxGCr7sRTrZc7ZK5+L0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: white;
       margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-image: url('https://i.pinimg.com/736x/d2/51/0c/d2510cced616251464875cbd0929088e.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      font-family: Arial, sans-serif;
       padding: 20px;
     }
 
-    h1 {
-      text-align: center;
-      color: #00adb5;
-      font-size: 1.8rem;
-    }
-
-    .post-form {
-      margin: 20px auto;
-      max-width: 100%;
-      width: 100%;
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 10px;
       max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 0 10px;
-    }
-
-    input, textarea {
       width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
+      animation: fadeIn ease 1s forwards;
+      opacity: 0;
+    }
+
+    h1.typing {
+      margin: 0 0 20px;
+      font-size: 2rem;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #00adb5;
+      width: 0;
+      animation: typing 2s steps(30, end) forwards, blink .75s step-end infinite;
+    }
+
+    p {
       font-size: 1rem;
+      line-height: 1.5;
+      animation: fadeIn ease 2s forwards;
     }
 
-    textarea {
-      resize: vertical;
+    .button-group {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
     }
 
-    button {
-      padding: 12px;
+    .button-link {
+      padding: 12px 20px;
       background-color: #00adb5;
       color: white;
-      border: none;
+      text-decoration: none;
       border-radius: 5px;
       font-weight: bold;
       font-size: 1rem;
-      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .delete-btn {
-      margin-top: 10px;
-      background-color: #e74c3c;
+    .button-link i {
+      margin-right: 8px;
     }
 
-    .posts {
-      max-width: 100%;
-      width: 100%;
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 0 10px;
+    .button-link:hover {
+      transform: scale(1.05);
+      background-color: #007e85;
     }
 
-    .post {
-      background: #1f1f1f;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
     }
 
-    .username {
-      font-weight: bold;
-      color: #00adb5;
-      margin-bottom: 5px;
+    @keyframes blink {
+      50% { border-color: transparent }
     }
 
-    .content {
-      white-space: pre-wrap;
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      h1.typing {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+
+      .button-link {
+        font-size: 0.95rem;
+        padding: 10px 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Simple Secure Blog</h1>
-  <form class="post-form" id="postForm" onsubmit="handleSubmit(event)">
-    <input type="text" id="username" placeholder="Enter a username" required />
-    <textarea id="message" rows="4" placeholder="Write your post here..." required></textarea>
-    <button type="submit">Post</button>
-  </form>
-  <div class="posts" id="postsContainer"></div>
+  <div class="overlay">
+    <h1 class="typing">[WebSec@penguin~#]</h1>
+    <p>
+      Hello, I'm Mr O, I'm Here To Learn the Cyber Arts. This is my corner of the web where I share my thoughts, work, and hobbies.
+    </p>
+    <div class="button-group">
+      <a class="button-link" href="blog.html"><i class="fa-solid fa-newspaper"></i>Blog</a>
+      <a class="button-link" href="https://www.youtube.com/@MrOs_Repository" target="_blank"><i class="fab fa-youtube"></i>YouTube</a>
+      <a class="button-link" href="https://github.com/imzodumb" target="_blank"><i class="fab fa-github"></i>GitHub</a>
+    </div>
+  </div>
 </body>
 </html>
+
