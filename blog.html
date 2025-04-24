@@ -179,9 +179,3 @@
 </body>
 </html>
 
-
-mobile_zip_path = Path("/mnt/data/blog_mobile.zip")
-with ZipFile(mobile_zip_path, 'w') as zipf:
-    zipf.write(mobile_friendly_path, arcname="blog.html")
-
-mobile_zip_path.name
