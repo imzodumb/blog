@@ -42,14 +42,6 @@
       content.textContent = post.message;
       div.appendChild(content);
 
-      // Create Like button
-      const likeButton = document.createElement('button');
-      likeButton.className = 'like-btn';
-      likeButton.textContent = `Like (${post.likes || 0})`;
-      likeButton.onclick = () => handleLike(postId);
-      div.appendChild(likeButton);
-
-      // Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = 'Delete';
       deleteBtn.className = 'delete-btn';
@@ -75,16 +67,6 @@
       });
     }
 
-    // Handle like button click
-    function handleLike(postId) {
-      const postRef = ref(db, 'posts/' + postId);
-      onValue(postRef, (snapshot) => {
-        const post = snapshot.val();
-        const newLikeCount = (post.likes || 0) + 1; // Increase like count by 1
-        push(postRef, { ...post, likes: newLikeCount });
-      });
-    }
-
     window.handleSubmit = function(e) {
       e.preventDefault();
       const username = escapeHTML(document.getElementById('username').value.trim());
@@ -94,8 +76,7 @@
       push(postsRef, {
         username,
         message,
-        timestamp: Date.now(),
-        likes: 0 // Initialize with 0 likes
+        timestamp: Date.now()
       });
 
       document.getElementById('postForm').reset();
@@ -159,11 +140,6 @@
     .delete-btn {
       margin-top: 10px;
       background-color: #e74c3c;
-    }
-
-    .like-btn {
-      margin-top: 10px;
-      background-color: #00b894;
     }
 
     .posts {
