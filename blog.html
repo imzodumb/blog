@@ -1,8 +1,3 @@
-from zipfile import ZipFile
-from pathlib import Path
-
-# Updated blog.html with responsive, mobile-friendly layout
-mobile_friendly_blog_html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,11 +178,7 @@ mobile_friendly_blog_html = """
   <div class="posts" id="postsContainer"></div>
 </body>
 </html>
-"""
 
-# Save and zip
-mobile_friendly_path = Path("/mnt/data/blog_mobile.html")
-mobile_friendly_path.write_text(mobile_friendly_blog_html)
 
 mobile_zip_path = Path("/mnt/data/blog_mobile.zip")
 with ZipFile(mobile_zip_path, 'w') as zipf:
